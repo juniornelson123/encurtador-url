@@ -71,28 +71,35 @@ func convertCoin() {
 		option = scanner.Text()
 
 		//Enter value for coin
-		fmt.Println("Entre com o valor: ")
+		fmt.Println("Entre com o valor(ex: 15.23, 1.00): ")
 		scanner1.Scan()
 
 		value, _ = strconv.ParseFloat(scanner1.Text(), 64)
 
 		//Enter type for convert coin
-		fmt.Println("Entre com a moeda para conversão(euro, libra, real, dolar: ")
+		fmt.Println("Entre com a moeda para conversão(euro, libra, real, dolar): ")
 		scanner2.Scan()
 
 		coin = scanner2.Text()
 
 		c := converter.Coin{option, value}
 
-		convertValue, err := c.ConvertCoin(coin)
+		if option == "" || coin == "" || value == 0 {
 
-		if err != nil {
-			fmt.Println("Erro ao tentar converter", err)
+			fmt.Println("### Preencha todos os campos ##\n")
+			convertCoin()
 		} else {
-			fmt.Printf("%.2f %s(s) são %.2f %s(s)\n\n\n", value, option, convertValue, coin)
-		}
 
-		restart()
+			convertValue, err := c.ConvertCoin(coin)
+
+			if err != nil {
+				fmt.Println("Erro ao tentar converter", err)
+			} else {
+				fmt.Printf("%.2f %s(s) são %.2f %s(s)\n\n\n", value, option, convertValue, coin)
+			}
+
+			restart()
+		}
 
 	}
 }
@@ -101,7 +108,6 @@ func restart() {
 	scanner3 := bufio.NewScanner(os.Stdin)
 	var action string
 
-	fmt.Println("*****************Conversor de Moedas*******************")
 	fmt.Println("Deseja Realizar mais alguma ação ?")
 	fmt.Println("1 - Menu Principal")
 	fmt.Println("2 - Sair")
