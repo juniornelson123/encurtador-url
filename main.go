@@ -1,18 +1,16 @@
 package main
 
 import (
+	"./shortener"
 	"bufio"
 	"fmt"
-	"github.com/juniornelson123/conversor-moeda/converter"
 	"os"
 	"os/exec"
-	"strconv"
 )
 
 func main() {
 	clear()
 	ui()
-
 }
 
 func ui() {
@@ -21,8 +19,8 @@ func ui() {
 
 	for action != "2" {
 
-		fmt.Println("*****************Conversor de Moedas*******************")
-		fmt.Println("1 - Converter moeda")
+		fmt.Println("*****************Encurtador de Url*******************")
+		fmt.Println("1 - Encurtar Url")
 		fmt.Println("2 - Sair")
 		fmt.Println("Selecione uma ação: ")
 
@@ -30,7 +28,7 @@ func ui() {
 		action = scanner3.Text()
 		switch {
 		case action == "1":
-			convertCoin()
+			shortUrl()
 			break
 		case action == "2":
 			fmt.Println("Saindo...")
@@ -38,8 +36,8 @@ func ui() {
 			break
 
 		default:
-			fmt.Println("Valor invalido")
 			main()
+			fmt.Println("Valor invalido")
 			break
 		}
 
@@ -52,56 +50,28 @@ func clear() {
 	c.Run()
 }
 
-func convertCoin() {
+func shortUrl() {
 
 	scanner := bufio.NewScanner(os.Stdin)
-	scanner1 := bufio.NewScanner(os.Stdin)
-	scanner2 := bufio.NewScanner(os.Stdin)
+	// scanner1 := bufio.NewScanner(os.Stdin)
 
 	var option string
-	var coin string
-	var value float64
+	var url string
 
 	for option != "q" {
 
-		//Enter type coin - euro/libra/real/dolar
-		fmt.Println("Entre com a moeda(euro, libra, real, dolar): ")
+		fmt.Println("Informa a url que deseja encurtar: ")
 
 		scanner.Scan()
-		option = scanner.Text()
+		url = scanner.Text()
 
-		//Enter value for coin
-		fmt.Println("Entre com o valor(ex: 15.23, 1.00): ")
-		scanner1.Scan()
+		c := shortener.Short(url)
+		fmt.Printf("\n\nUrl Encurtada: %s\n\n", <-c)
 
-		value, _ = strconv.ParseFloat(scanner1.Text(), 64)
-
-		//Enter type for convert coin
-		fmt.Println("Entre com a moeda para conversão(euro, libra, real, dolar): ")
-		scanner2.Scan()
-
-		coin = scanner2.Text()
-
-		c := converter.Coin{option, value}
-
-		if option == "" || coin == "" || value == 0 {
-
-			fmt.Println("### Preencha todos os campos ##\n")
-			convertCoin()
-		} else {
-
-			convertValue, err := c.ConvertCoin(coin)
-
-			if err != nil {
-				fmt.Println("Erro ao tentar converter", err)
-			} else {
-				fmt.Printf("%.2f %s(s) são %.2f %s(s)\n\n\n", value, option, convertValue, coin)
-			}
-
-			restart()
-		}
+		restart()
 
 	}
+
 }
 
 func restart() {
