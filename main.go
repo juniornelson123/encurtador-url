@@ -6,7 +6,7 @@ import (
 	"os"
 	"os/exec"
 
-	"./shortener"
+	"github.com/juniornelson123/encurtador-url/shortener"
 )
 
 func main() {
