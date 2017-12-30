@@ -1,11 +1,12 @@
 package main
 
 import (
-	"./shortener"
 	"bufio"
 	"fmt"
 	"os"
 	"os/exec"
+
+	"./shortener"
 )
 
 func main() {
@@ -65,10 +66,16 @@ func shortUrl() {
 		scanner.Scan()
 		url = scanner.Text()
 
-		c := shortener.Short(url)
-		fmt.Printf("\n\nUrl Encurtada: %s\n\n", <-c)
+		c, err := shortener.Short(url)
+		errorFunc := <-err
+		if errorFunc.Error() != "false" {
 
-		restart()
+			fmt.Printf("\n\nErro: %s\n\n", errorFunc)
+			shortUrl()
+		} else {
+			fmt.Printf("\n\nUrl Encurtada: %s\n\n", <-c)
+			restart()
+		}
 
 	}
 
